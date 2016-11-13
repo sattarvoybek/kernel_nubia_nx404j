@@ -154,11 +154,18 @@ static struct gpiomux_setting gpio_spi_act_config = {
 	.pull = GPIOMUX_PULL_NONE,
 };
 
+//+++ modify by duguowei,2013.12.18,for breath led
+#ifdef CONFIG_ZTEMT_BREATH_LED_GPIO_I2C
+//
+#else
 static struct gpiomux_setting gpio_spi_cs_act_config = {
 	.func = GPIOMUX_FUNC_1,
 	.drv = GPIOMUX_DRV_6MA,
 	.pull = GPIOMUX_PULL_DOWN,
 };
+#endif
+//--- modify by duguowei,2013.12.18,for breath led
+
 static struct gpiomux_setting gpio_spi_susp_config = {
 	.func = GPIOMUX_FUNC_GPIO,
 	.drv = GPIOMUX_DRV_2MA,
@@ -238,6 +245,34 @@ static struct gpiomux_setting lcd_rst_sus_cfg = {
 	.pull = GPIOMUX_PULL_DOWN,
 };
 
+#ifdef CONFIG_ZTEMT_LCD_POWER_CONTRL
+/*avdd neg ctl board2 add ,mayu 6.25*/
+static struct gpiomux_setting lcd_en_act_cfg = {
+	.func = GPIOMUX_FUNC_GPIO,
+	.drv = GPIOMUX_DRV_8MA,
+	.pull = GPIOMUX_PULL_NONE,
+	.dir = GPIOMUX_OUT_HIGH,
+};
+
+static struct gpiomux_setting lcd_en_sus_cfg = {
+	.func = GPIOMUX_FUNC_GPIO,
+	.drv = GPIOMUX_DRV_2MA,
+	.pull = GPIOMUX_PULL_DOWN,
+};
+static struct gpiomux_setting lcd_avdd_neg_en_act_cfg = {
+	.func = GPIOMUX_FUNC_GPIO,
+	.drv = GPIOMUX_DRV_8MA,
+	.pull = GPIOMUX_PULL_NONE,
+	.dir = GPIOMUX_OUT_HIGH,
+};
+
+static struct gpiomux_setting lcd_avdd_neg_en_sus_cfg = {
+	.func = GPIOMUX_FUNC_GPIO,
+	.drv = GPIOMUX_DRV_2MA,
+	.pull = GPIOMUX_PULL_DOWN,
+};
+#endif
+
 static struct msm_gpiomux_config msm_lcd_configs[] __initdata = {
 	{
 		.gpio = 25,		/* LCD Reset */
@@ -246,6 +281,24 @@ static struct msm_gpiomux_config msm_lcd_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &lcd_rst_sus_cfg,
 		},
 	},
+#ifdef CONFIG_ZTEMT_LCD_POWER_CONTRL
+/*avdd  ctl board2 add ,mayu 6.25*/
+	{
+		.gpio = 33,
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &lcd_en_act_cfg,
+			[GPIOMUX_SUSPENDED] = &lcd_en_sus_cfg,
+		},
+	},
+	{
+		.gpio = 34,
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &lcd_avdd_neg_en_act_cfg ,
+			[GPIOMUX_SUSPENDED] = &lcd_avdd_neg_en_sus_cfg ,
+		},
+	},
+#else
+/*qcom ori*/
 	{
 		.gpio = 109,		/* LCD Enable */
 		.settings = {
@@ -253,6 +306,7 @@ static struct msm_gpiomux_config msm_lcd_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &lcd_rst_sus_cfg,
 		},
 	}
+#endif
 };
 
 static struct msm_gpiomux_config msm_blsp_configs[] __initdata = {
@@ -270,6 +324,30 @@ static struct msm_gpiomux_config msm_blsp_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &gpio_spi_susp_config,
 		},
 	},
+//+++ modify by duguowei,2013.12.18
+	#ifdef CONFIG_ZTEMT_BREATH_LED_GPIO_I2C
+	{
+		.gpio      = 2,		/* BLSP1 QUP1 I2C_SDA */
+		.settings = {
+			[GPIOMUX_ACTIVE] = &gpio_i2c_config,
+			[GPIOMUX_SUSPENDED] = &gpio_i2c_config,
+		},
+	},
+	{
+		.gpio      = 3,		/* BLSP1 QUP1 I2C_SCL */
+		.settings = {
+			[GPIOMUX_ACTIVE] = &gpio_i2c_config,
+			[GPIOMUX_SUSPENDED] = &gpio_i2c_config,
+		},
+	},
+	#else
+	{
+		.gpio      = 2,		/* BLSP1 QUP1 SPI_CS1 */
+		.settings = {
+			[GPIOMUX_ACTIVE] = &gpio_spi_cs_act_config,
+			[GPIOMUX_SUSPENDED] = &gpio_spi_susp_config,
+		},
+	},
 	{
 		.gpio      = 3,		/* BLSP1 QUP1 SPI_CLK */
 		.settings = {
@@ -277,6 +355,10 @@ static struct msm_gpiomux_config msm_blsp_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &gpio_spi_susp_config,
 		},
 	},
+	#endif
+//--- modify by duguowei,2013.12.18
+#ifdef CONFIG_ZTEMT_CAMERA
+#else
 	{
 		.gpio      = 14,	/* BLSP1 QUP4 I2C_SDA */
 		.settings = {
@@ -284,6 +366,7 @@ static struct msm_gpiomux_config msm_blsp_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &gpio_i2c_config,
 		},
 	},
+#endif	
 	{
 		.gpio      = 15,	/* BLSP1 QUP4 I2C_SCL */
 		.settings = {
@@ -415,12 +498,15 @@ static struct msm_gpiomux_config msm_skuf_blsp_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &gpio_nc_cfg,
 		},
 	},
+#ifdef CONFIG_ZTEMT_CAMERA
+#else	
 	{
 		.gpio      = 14,	/* NC */
 		.settings = {
 			[GPIOMUX_SUSPENDED] = &gpio_nc_cfg,
 		},
 	},
+#endif	
 };
 
 static struct msm_gpiomux_config msm_skuf_goodix_configs[] __initdata = {
@@ -683,6 +769,22 @@ static struct gpiomux_setting cam_settings[] = {
 
 
 static struct msm_gpiomux_config msm_sensor_configs[] __initdata = {
+#ifdef CONFIG_ZTEMT_CAMERA   //tanyijun add   for avdd enable
+	{
+		.gpio = 12, /* AVDD enable for front camera */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &cam_settings[3],
+			[GPIOMUX_SUSPENDED] = &cam_settings[4],
+		},
+	},
+	{
+		.gpio = 14, /* AVDD enable for back camera */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &cam_settings[3],
+			[GPIOMUX_SUSPENDED] = &cam_settings[4],
+		},
+	},
+#endif
 	{
 		.gpio = 26, /* CAM_MCLK0 */
 		.settings = {
@@ -760,7 +862,29 @@ static struct msm_gpiomux_config msm_sensor_configs_skuf_plus[] __initdata = {
 	},
 };
 
+#ifdef CONFIG_ZTEMT_AUDIO_NX404H
 
+static struct gpiomux_setting euro_america_HP_act_cfg = {
+	.func = GPIOMUX_FUNC_GPIO,
+	.drv = GPIOMUX_DRV_2MA,
+	.pull = GPIOMUX_PULL_UP,
+};
+
+static struct gpiomux_setting euro_america_HP_suspend_cfg = {
+	.func = GPIOMUX_FUNC_GPIO,
+	.drv = GPIOMUX_DRV_2MA,
+	.pull = GPIOMUX_PULL_DOWN,
+};
+static struct msm_gpiomux_config msm_euro_america_HP_configs[] __initdata = {
+	{
+		.gpio = 63,
+		.settings = {
+			[GPIOMUX_SUSPENDED] = &euro_america_HP_suspend_cfg,
+			[GPIOMUX_ACTIVE] = &euro_america_HP_act_cfg,
+		},
+	},
+};
+#else
 static struct gpiomux_setting auxpcm_act_cfg = {
 	.func = GPIOMUX_FUNC_1,
 	.drv = GPIOMUX_DRV_8MA,
@@ -803,6 +927,7 @@ static struct msm_gpiomux_config msm_auxpcm_configs[] __initdata = {
 		},
 	},
 };
+#endif
 
 static struct gpiomux_setting usb_otg_sw_cfg = {
 	.func = GPIOMUX_FUNC_GPIO,
@@ -955,8 +1080,12 @@ void __init msm8226_init_gpiomux(void)
 		msm_gpiomux_install(msm_sensor_configs_skuf_plus,
 			ARRAY_SIZE(msm_sensor_configs_skuf_plus));
 
-	msm_gpiomux_install(msm_auxpcm_configs,
+#ifdef CONFIG_ZTEMT_AUDIO_NX404H
+	msm_gpiomux_install(msm_euro_america_HP_configs,ARRAY_SIZE(msm_euro_america_HP_configs));
+#else
+    msm_gpiomux_install(msm_auxpcm_configs,
 			ARRAY_SIZE(msm_auxpcm_configs));
+#endif
 
 	if (of_board_is_cdp() || of_board_is_mtp() || of_board_is_xpm())
 		msm_gpiomux_install(usb_otg_sw_configs,

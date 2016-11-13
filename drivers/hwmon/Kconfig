@@ -1478,6 +1478,19 @@ config ZTEMT_SENSORS_ALS_PS_TMD2772
 	  If you say yes here you get support for AMS's 
 	  als ps TMD2772
 	  
+config ZTEMT_SENSORS_ALS_PS_TMD2772_NE501J
+	tristate "TMD2772 device driver for NE501J structure "
+	depends on ZTEMT_SENSORS_ALS_PS
+	help
+	  If you say yes here you get support for AMS's 
+	  als ps TMD2772
+
+config ZTEMT_SENSORS_ALS_PS_TMD2772_NX404H
+	tristate "TMD2772 device driver for NX404H structure"
+	depends on ZTEMT_SENSORS_ALS_PS
+	help
+	  If you say yes here you get support for AMS's 
+	  als ps TMD2772
 endif
 ################################################# ALS_PS END	
 
@@ -1555,13 +1568,13 @@ config ZTEMT_LIQUID_LED
 	help
 	  ZTEMT liquid led
 #ZTEMT END 
-
-config ZTEMT_BREATH_LED_NX503A
-	bool "ZTEMT_BREATH_LED_NX503A"
-	default n
+#+++
+config ZTEMT_BREATH_LED_GPIO_I2C
+	bool "ZTEMT liquid led gpio i2c"
+	default y
 	help
-	  ZTEMT_BREATH_LED_NX503A
-#ZTEMT END 
+	  ZTEMT liquid led
+#---
 if ACPI
 
 comment "ACPI drivers"

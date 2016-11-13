@@ -4,17 +4,11 @@ menu "MSM SoC Audio support"
 config SND_MSM_DAI_SOC
 	tristate
 
-config ZTEMT_AUDIO_EXT_AMP
-       tristate "ZTEMT_AUDIO_EXT_AMP"
-
-config ZTEMT_AUDIO_HEADSET_SW
-       tristate "ZTEMT_AUDIO_EXT_AMP"
-
-config ZTEMT_AUDIO_MBHC_OPEN
-       tristate "ZTEMT_AUDIO_EXT_AMP"
+config ZTEMT_AUDIO_NX404H
+        tristate "AUDIO MACRO for ZTEMT NX404J"
 
 config SND_MSM_SOC_MSM7K
-	 tristate
+	tristate
 
 config SND_MSM_SOC
 	tristate "SoC Audio for the MSM series chips"

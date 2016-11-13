@@ -139,6 +139,7 @@ obj-$(CONFIG_SENSORS_QPNP_ADC_CURRENT)	+= qpnp-adc-current.o qpnp-adc-common.o
 obj-$(CONFIG_ZTEMT_SENSORS_ALS_PS_AUTO_DETECT) += als_prox.o tmg399x.o tmd2772.o
 obj-$(CONFIG_ZTEMT_SENSORS_ALS_PS_TMG3993) += tmg399x.o
 obj-$(CONFIG_ZTEMT_SENSORS_ALS_PS_TMD2772) += tmd2772.o
+obj-$(CONFIG_ZTEMT_SENSORS_ALS_PS_TMD2772_NX404H) += tmd2772_nx404h.o
 ################################################# ALS_PS END
 
 ################################################# TEMP_HUMI START

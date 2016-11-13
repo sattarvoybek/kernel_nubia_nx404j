@@ -3808,7 +3808,13 @@ static int set_battery_data(struct qpnp_bms_chip *chip)
 	if (chip->batt_type == BATT_DESAY) {
 		batt_data = &desay_5200_data;
 	} else if (chip->batt_type == BATT_PALLADIUM) {
+#ifdef CONFIG_ZTEMT_2400AMH_BATTERY
+		batt_data = &ztemt_2400mAh_data;
+#elif defined(CONFIG_ZTEMT_2000AMH_BATTERY)
+		batt_data = &ztemt_2000mAh_data;
+#else	
 		batt_data = &palladium_1500_data;
+#endif
 	} else if (chip->batt_type == BATT_OEM) {
         #if defined(CONFIG_ZTEMT_NX507_BATT_2300MAH)
 		batt_data = &ztemt_nx507_2300mAh_data;
