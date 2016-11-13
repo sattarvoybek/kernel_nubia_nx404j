@@ -36,7 +36,7 @@
 
 #include <linux/i2c.h>
 #include "aw_9106b.h"
-#include  <../../include/linux/printk.h>
+#include  "../../include/linux/printk.h"
 
 static bool AW9106B_SUSPEND_FLAG=false; 
 #define GPIO_PWDN 28

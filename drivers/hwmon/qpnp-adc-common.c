@@ -44,7 +44,7 @@
    and provided to the battery driver in the units desired for
    their framework which is 0.1DegC. True resolution of 0.1DegC
    will result in the below table size to increase by 10 times */
-#if  defined(CONFIG_ZTEMT_CHARGE_BQ24192) ||defined( CONFIG_ZTEMT_COMM_CHARGE)
+#ifdef CONFIG_ZTEMT_COMM_CHARGE
 static const struct qpnp_vadc_map_pt adcmap_btm_threshold[] = {
 	{-300, 1626},
 	{-250, 1573},

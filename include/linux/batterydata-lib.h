@@ -145,6 +145,12 @@ extern struct bms_battery_data  ztemt_3000mAh_data_nx506;
 #ifdef CONFIG_ZTEMT_NX507_BATT_2300MAH
 extern struct bms_battery_data  ztemt_nx507_2300mAh_data;
 #endif
+#ifdef CONFIG_ZTEMT_2400AMH_BATTERY
+extern struct bms_battery_data  ztemt_2400mAh_data;
+#endif
+#ifdef CONFIG_ZTEMT_2000AMH_BATTERY
+extern struct bms_battery_data  ztemt_2000mAh_data;
+#endif
 
 int interpolate_fcc(struct single_row_lut *fcc_temp_lut, int batt_temp);
 int interpolate_scalingfactor(struct sf_lut *sf_lut, int row_entry, int pc);

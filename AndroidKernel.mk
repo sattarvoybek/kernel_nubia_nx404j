@@ -31,6 +31,8 @@ ZIMG_FILE = $(addprefix $(KERNEL_OUT)/arch/arm/boot/,$(patsubst %.dts,%-zImage,$
 KERNEL_ZIMG = $(KERNEL_OUT)/arch/arm/boot/zImage
 DTC = $(KERNEL_OUT)/scripts/dtc/dtc
 
+export CONFIG_BUILD_ARM_APPENDED_DTB_IMAGE_NAMES=$(DTS_NAME)
+
 define append-dtb
 mkdir -p $(KERNEL_OUT)/arch/arm/boot;\
 $(foreach DTS_NAME, $(DTS_NAMES), \
@@ -66,9 +68,6 @@ if [ "$$mdpath" != "" ];then\
 mpath=`dirname $$mdpath`; rm -rf $$mpath;\
 fi
 endef
-
-ZTEMT_DTS_NAME:=$(DTS_NAME)
-export ZTEMT_DTS_NAME
 
 $(KERNEL_OUT):
 	mkdir -p $(KERNEL_OUT)

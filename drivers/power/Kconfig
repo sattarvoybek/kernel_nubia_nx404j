@@ -489,17 +489,6 @@ config CHARGER_SMB347
 	  Say Y to include support for Summit Microelectronics SMB347
 	  Battery Charger.
 
-config ZTEMT_2000AMH_BATTERY
-	bool "ZTEMT 2000AMH BATTERY"
-	default n
-	help
-	  ZTEMT 2000AMH Battery Feature
-	  
-config ZTEMT_2400AMH_BATTERY
-	bool "ZTEMT 2400AMH BATTERY"
-	default n
-	help
-	  ZTEMT 2400AMH Battery Feature
 config AB8500_BM
 	bool "AB8500 Battery Management Driver"
 	depends on AB8500_CORE && AB8500_GPADC
@@ -515,11 +504,6 @@ config AB8500_BATTERY_THERM_ON_BATCTRL
 	  
 ################ZTEMT charger
 menu "ZTEMT charger and battery"
-config ZTEMT_CHARGE_BQ24192
-	bool "ZTEMT Charge bq24192"
-	default n
-	help
-	  ZTEMT Charge bq24192
 
 config ZTEMT_CHARGE_QPNP
 	bool "ZTEMT Charge qpnp"
@@ -536,6 +520,13 @@ config ZTEMT_COMM_CHARGE
 	default n
 	help
 	  ZTEMT comm qpnp Charge 
+	  
+config ZTEMT_2000AMH_BATTERY
+	bool "ZTEMT 2000AMH BATTERY"
+	default n
+	help
+	  ZTEMT 2000AMH Battery Feature
+	  	  
 config ZTEMT_CHARGE_SUB
 	bool "ZTEMT  Charge feature for special function"
 	default n

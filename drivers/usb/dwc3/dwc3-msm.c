@@ -269,9 +269,6 @@ struct dwc3_msm {
 #define USB_SSPHY_1P8_HPM_LOAD		23000	/* uA */
 
 static struct usb_ext_notification *usb_ext;
-#ifdef CONFIG_ZTEMT_CHARGE_BQ24192
-extern int qpnp_is_usb_present(void);
-#endif
 
 /**
  *
@@ -1831,7 +1828,7 @@ static void dwc3_chg_detect_work(struct work_struct *w)
 			dwc3_msm_write_readback(mdwc->base,
 					CHARGING_DET_CTRL_REG, 0x1F, 0x10);
 			if (mdwc->ext_chg_opened) {
-				#if defined(CONFIG_ZTEMT_CHARGE_BQ24192) || defined(CONFIG_ZTEMT_COMM_CHARGE)
+				#ifdef CONFIG_ZTEMT_COMM_CHARGE
 				#else
 				init_completion(&mdwc->ext_chg_wait);
 				#endif
@@ -2364,19 +2361,19 @@ static int dwc3_msm_power_get_property_usb(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_CURRENT_MAX:
 		val->intval = mdwc->current_max;
 		break;
-	#if defined(CONFIG_ZTEMT_CHARGE_BQ24192)
+//	#if defined(CONFIG_ZTEMT_CHARGE_BQ24192)
 	case POWER_SUPPLY_PROP_PRESENT:
 	case POWER_SUPPLY_PROP_ONLINE:
 		val->intval = qpnp_is_usb_present();
 		break;
-	#else		
+//	#else		
 	case POWER_SUPPLY_PROP_PRESENT:
 		val->intval = mdwc->vbus_active;
 		break;
 	case POWER_SUPPLY_PROP_ONLINE:
 		val->intval = mdwc->online;
 		break;
-	#endif	
+//	#endif	
 	case POWER_SUPPLY_PROP_TYPE:
 		val->intval = psy->type;
 		break;

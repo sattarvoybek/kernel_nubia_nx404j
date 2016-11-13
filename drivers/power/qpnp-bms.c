@@ -3808,18 +3808,18 @@ static int set_battery_data(struct qpnp_bms_chip *chip)
 	if (chip->batt_type == BATT_DESAY) {
 		batt_data = &desay_5200_data;
 	} else if (chip->batt_type == BATT_PALLADIUM) {
-#ifdef CONFIG_ZTEMT_2400AMH_BATTERY
-		batt_data = &ztemt_2400mAh_data;
-#elif defined(CONFIG_ZTEMT_2000AMH_BATTERY)
-		batt_data = &ztemt_2000mAh_data;
-#else	
-		batt_data = &palladium_1500_data;
-#endif
+//#ifdef CONFIG_ZTEMT_2400AMH_BATTERY
+//		batt_data = &ztemt_2400mAh_data;
+//#elif defined(CONFIG_ZTEMT_2000AMH_BATTERY)
+//		batt_data = &ztemt_2000mAh_data;
+//#else	
+//		batt_data = &palladium_1500_data;
+//#endif
 	} else if (chip->batt_type == BATT_OEM) {
-        #if defined(CONFIG_ZTEMT_NX507_BATT_2300MAH)
-		batt_data = &ztemt_nx507_2300mAh_data;
-        #elif defined(CONFIG_ZTEMT_BATT_3000MAH)
-		batt_data = &ztemt_3000mAh_data;
+        #if defined(CONFIG_ZTEMT_2400AMH_BATTERY)
+		batt_data = &ztemt_2400mAh_data;
+        #elif defined(CONFIG_ZTEMT_2000AMH_BATTERY)
+		batt_data = &ztemt_2000mAh_data;
 		#elif defined(CONFIG_ZTEMT_BATT_3000MAH_NX506J)
 		batt_data = &ztemt_3000mAh_data_nx506;
 		#else
@@ -4585,10 +4585,7 @@ static int bms_suspend(struct device *dev)
 	struct qpnp_bms_chip *chip = dev_get_drvdata(dev);
 
 	cancel_delayed_work_sync(&chip->calculate_soc_delayed_work);
-	#ifdef CONFIG_ZTEMT_CHARGE_BQ24192
-	#else
 	chip->was_charging_at_sleep = is_battery_charging(chip);
-	#endif
 	return 0;
 }
 

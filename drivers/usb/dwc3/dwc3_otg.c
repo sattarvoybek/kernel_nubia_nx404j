@@ -24,9 +24,6 @@
 #include "io.h"
 #include "xhci.h"
 
-#ifdef CONFIG_ZTEMT_CHARGE_BQ24192
-#include <../../power/bq24192_charger.h>
-#endif
 #ifdef CONFIG_ZTEMT_COMM_CHARGE
 #include <linux/qpnp/qpnp-adc.h>
 #endif
@@ -419,10 +416,6 @@ static void dwc3_ext_chg_det_done(struct usb_otg *otg, struct dwc3_charger *chg)
 	 */
 	if (test_bit(B_SESS_VLD, &dotg->inputs))
 		queue_delayed_work(system_nrt_wq, &dotg->sm_work, 0);
-
-	#ifdef CONFIG_ZTEMT_CHARGE_BQ24192
-	bq24192_notify_charger(chg->chg_type);
-	#endif
 
 #ifdef CONFIG_ZTEMT_COMM_CHARGE
 	 qpnp_notify_charger_of_the_charger_type((int)chg->chg_type);

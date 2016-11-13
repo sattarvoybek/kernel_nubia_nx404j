@@ -3043,4 +3043,13 @@ config KRAIT_REGULATOR
 	 line from the PMIC. This supply line is powered by multiple
 	 regulators running in ganged mode inside the PMIC. Enable
 	 this option to support such configurations.
+
+config NUBIA_NX404J_DTB
+	depends on ARCH_MSM8226
+	default n
+	bool "Nubia nx404j Device DTBs"
+	help
+	 Only include Nubia nx404j specific DTBs to limit the number that
+	 get built during kernel compilation.
+
 endif

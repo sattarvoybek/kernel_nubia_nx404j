@@ -29,9 +29,6 @@
 #include <linux/regulator/of_regulator.h>
 #include <linux/regulator/machine.h>
 #include <linux/of_batterydata.h>
-#ifdef CONFIG_ZTEMT_CHARGE_BQ24192
-#include <bq24192_charger.h>
-#endif
 #include <linux/qpnp-revid.h>
 #include <linux/android_alarm.h>
 #include <linux/spinlock.h>
@@ -442,7 +439,7 @@ struct qpnp_chg_chip {
 
 };
 #ifdef CONFIG_ZTEMT_POWER_DEBUG
-#include <../../arch/arm/mach-msm/clock.h>
+#include "../../arch/arm/mach-msm/clock.h"
 #define POWER_MONITOR_PERIOD_MS	10000
 #define DRV_NAME "zte_power_debug"
 static int power_debug_switch=1;
@@ -1701,10 +1698,6 @@ qpnp_chg_vddmax_and_trim_set(struct qpnp_chg_chip *chip,
 {
 	int rc, trim_set;
 	u8 vddmax = 0, trim = 0;
-    #ifdef CONFIG_ZTEMT_CHARGE_BQ24192
-	voltage = 4360;
-	trim_mv = 0;
-    #endif
 
 	if (voltage < QPNP_CHG_VDDMAX_MIN
 			|| voltage > QPNP_CHG_V_MAX_MV) {
@@ -1926,9 +1919,6 @@ qpnp_chg_usb_usbin_valid_irq_handler(int irq, void *_chip)
 	if (chip->usb_present ^ usb_present) {
 		chip->aicl_settled = false;
 		chip->usb_present = usb_present;
-		#ifdef CONFIG_ZTEMT_CHARGE_BQ24192
-		bq24192_set_chg_status(usb_present);
-		#endif
 		if (!usb_present) {
 			/* when a valid charger inserted, and increase the
 			 *  charger voltage to OVP threshold, then
@@ -3370,9 +3360,6 @@ qpnp_chg_vddsafe_set(struct qpnp_chg_chip *chip, int voltage)
 {
 	u8 temp;
 
-    #ifdef CONFIG_ZTEMT_CHARGE_BQ24192
-	voltage = 4360;
-    #endif
 	if (voltage < QPNP_CHG_V_MIN_MV
 			|| voltage > QPNP_CHG_V_MAX_MV) {
 		pr_err("bad mV=%d asked to set\n", voltage);
@@ -5593,97 +5580,6 @@ qpnp_charger_read_dt_props(struct qpnp_chg_chip *chip)
 	return rc;
 }
 
-#ifdef CONFIG_ZTEMT_CHARGE_QPNP
-struct qpnp_chg_chip	*qpnp_chip = NULL;
-
-int qpnp_dcdc_enable(int enable)
-{
-	if (!qpnp_chip) {
-		pr_err("%s:called before init\n",__func__);
-		return -1;
-	}
-	
-    PMLOG_DEBUG(" dcdc_enable=%d\n",enable);
-    qpnp_chg_force_run_on_batt(qpnp_chip, !enable);
-    return 0;
-}
-
-int qpnp_get_battery_temp(void)
-{
-	if (!qpnp_chip) {
-		pr_err("%s:called before init\n",__func__);
-		return DEFAULT_TEMP;
-	}
-	
-	return get_prop_batt_temp(qpnp_chip);
-}
-int qpnp_is_batt_present(void)
-{
-	if (!qpnp_chip) {
-		pr_err("%s:called before init\n",__func__);
-		return 1;
-	}
-
-    return get_prop_batt_present(qpnp_chip);
-}
-
-int qpnp_get_charger_vol(void)
-{
-	int usbin_mv;
-	struct qpnp_vadc_result adc_result;
-	
-	if (!qpnp_chip) {
-		pr_err("%s:called before init\n",__func__);
-		return 0;
-	}
-	
-	qpnp_vadc_read(qpnp_chip->vadc_dev, USBIN, &adc_result);
-	usbin_mv = (int)adc_result.physical/1000;
-
-	return usbin_mv;
-}
-#ifdef CONFIG_ZTEMT_CHARGE_BQ24192
-int qpnp_is_usb_present(void)
-{
-	int usbin_mv;
-	
-	if (!qpnp_chip) {
-		pr_err("%s:called before init\n",__func__);
-		return 0;
-	}
-
-	usbin_mv = qpnp_get_charger_vol();
-	PMLOG_DEBUG("usbin_mv=%d\n",usbin_mv);
-	
- 	return qpnp_chg_is_usb_chg_plugged_in(qpnp_chip) && (usbin_mv > 3800);
-}
-#endif
-
-int qpnp_is_hvdcp_charger(void)
-{
-    int usbin_mv;
-
-	usbin_mv = qpnp_get_charger_vol();
-	PMLOG_DEBUG(" qpnp get usbin_mv=%d\n",usbin_mv);
-
-	if(usbin_mv > 8000)
-		return 1;
-	else
-		return 0;
-}
-
-static ssize_t bq24192_show_hvdcp(struct device *dev,
-		struct device_attribute *attr, char *buf)
-{
-	int is_hvdcp = qpnp_is_hvdcp_charger();
-	
-	return sprintf(buf, "%d\n", is_hvdcp);
-}
-
-const static DEVICE_ATTR(is_hvdcp, S_IRUGO | S_IWUSR, bq24192_show_hvdcp, NULL);
-
-#endif
-	
 #ifdef CONFIG_ZTEMT_POWER_DEBUG
 static void print_battery_information(struct qpnp_chg_chip *chip)
 {

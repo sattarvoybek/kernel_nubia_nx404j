@@ -36,21 +36,6 @@
 //--- add by duguowei,2013.12.18,for breath led
 	i2c@f9927000 { /* BLSP1 QUP5 */
 /* ZTEMT Added by LiuYongfeng, 2013/12/17 */
-/*		synaptics@20 {
-			compatible = "synaptics,rmi4";
-			reg = <0x20>;
-			interrupt-parent = <&msmgpio>;
-			interrupts = <17 0x2008>;
-			vdd-supply = <&pm8226_l19>;
-			vcc_i2c-supply = <&pm8226_lvs1>;
-			synaptics,reset-gpio = <&msmgpio 16 0x00>;
-			synaptics,irq-gpio = <&msmgpio 17 0x2008>;
-			synaptics,button-map = <139 102 158>;
-			synaptics,i2c-pull-up;
-			synaptics,power-down;
-			synaptics,disable-gpios;
-		};*/
-
 		cyttsp4_i2c_adapter@24 {
 			compatible = "cypress,cyttsp4_i2c_adapter";
 			reg = <0x24>;
@@ -71,7 +56,12 @@
 			vcc_i2c-supply = <&pm8226_lvs1>;
 			synaptics,reset-gpio = <&msmgpio 16 0x00>;
 			synaptics,irq-gpio = <&msmgpio 17 0x00>;
-			synaptics,regulator_en;
+			synaptics,reset_on_state = <0>;
+			synaptics,reset_delay_ms = <100>;
+			synaptics,reset_active_ms = <20>;
+			//synaptics,power_gpio = <-1>;
+			synaptics,power_on_state = <1>;
+			synaptics,power_delay_ms = <160>;
 		};
 /* ZTEMT END */
 	};
@@ -575,22 +565,6 @@
 &dsi_r69431_720_cmd {
      status = "disabled";
      qcom,cont-splash-enabled;
-};
-
-&dsi_otm1282a_720_vid {
-     status = "disabled";
-     qcom,cont-splash-enabled;
-};
-
-
-&dsi_otm1282a_720_cmd {
-     status = "disabled";
-     qcom,cont-splash-enabled;
-};
-
-&dsi_r63311_1080_vid {
-	status = "disabled";
-	qcom,cont-splash-enabled;
 };
 &dsi_nt35590_720_vid {
 	qcom,cont-splash-enabled;
